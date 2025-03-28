@@ -1,3 +1,4 @@
+CI/CD Pipeline with Jenkins, Docker, and Maven
 
 Install and configure Jenkins software in your EC2:
 Overview
