@@ -1,4 +1,4 @@
-# PROJECT-2: Jenkins CI/CD Pipeline with Docker
+# Jenkins CI/CD Pipeline with Docker
 
 ## Overview
 This project sets up a **Jenkins-based CI/CD pipeline** to automate building, testing, and deploying a Java-based application using **Maven, Docker, and AWS EC2**.
