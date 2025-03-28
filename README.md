@@ -1,71 +1,75 @@
-# Jenkins CI/CD Pipeline with Docker
+# 🚀 Automated CI/CD Pipeline for Jenkins and Docker
 
-## Overview
-This project sets up a **Jenkins-based CI/CD pipeline** to automate building, testing, and deploying a Java-based application using **Maven, Docker, and AWS EC2**.
+![0_-wYqzZYZhwUuS1SI](https://github.com/user-attachments/assets/662185ab-8afc-402d-95d3-8aeea6d0af67)
 
-## Prerequisites
-Before starting, ensure you have the following:
+## 📌 Project Overview
+This project sets up an **Automated CI/CD Pipeline** for Project-2 using **Jenkins, Docker, and Maven**. It streamlines the software development lifecycle by automating **code checkout, build, test, containerization, and deployment**.
 
-- **Jenkins Server**: Running on an AWS EC2 instance or local server.
-- **Jenkins Plugins**:
-  - Git Plugin
-  - Maven Integration Plugin
-  - Docker Plugin
-- **Git Repository**: Stores the application source code.
-- **Deployment Server**: An EC2 instance where the application will be deployed.
+## 🎯 Objectives
+- Automate **code checkout, build, and deployment** using **Jenkins**.
+- Utilize **Maven** for project builds.
+- Deploy application **containers with Docker**.
+- Push Docker images to **Docker Hub**.
+- Enable seamless integration with **GitHub**.
 
-## Jenkins Pipeline Workflow
-The pipeline performs the following tasks:
+## 🏗️ Deployment Process
 
-1. **Check out the code** from a Git repository.
-2. **Build the project** using Maven.
-3. **Run unit tests** and publish results.
-4. **Remove old Docker containers & images**.
-5. **Build a new Docker image** and push it to Docker Hub.
-6. **Run the new Docker container** on the EC2 instance.
+### 🔹 Prerequisites
+- An **EC2 instance** running Jenkins.
+- Installed Jenkins plugins:
+  - **Git Plugin**
+  - **Maven Integration Plugin**
+  - **Docker Plugin**
+- A **GitHub repository** for version control.
+- A **Docker Hub account** for storing images.
 
-## Setup Instructions
-
-### 1. Install & Configure Jenkins
-Connect to the EC2 instance, install Jenkins, and start the service:
-```sh
-sudo yum install -y java-17-openjdk-devel
-sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
-sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
-sudo yum install -y jenkins
+### 🔹 Jenkins Setup on EC2
+```bash
+sudo wget -O /etc/yum.repos.d/Jenkins.repo \ 
+  https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+sudo yum upgrade
+sudo yum install fontconfig java-17-openjdk
+sudo yum install jenkins
 sudo systemctl enable jenkins
 sudo systemctl start jenkins
 ```
-Access Jenkins UI: `http://<EC2-PUBLIC-IP>:8080`
+- **Access Jenkins UI**: `http://<jenkins-ec2-ip>:8080`
+- Install required plugins: **Git, Maven, Docker**
 
-### 2. Configure Jenkins Pipeline
-- **Create a new Pipeline Job**
-- **Add the following script:**
+## ⚙️ Jenkins Pipeline
+
+### 📌 Pipeline Workflow
+1. **Checkout Code** from GitHub
+2. **Build the project** using Maven
+3. **Remove old Docker container & image**
+4. **Build and push Docker image to Docker Hub**
+5. **Deploy the container**
 
 ```groovy
 pipeline {
     agent { label 'dev' }
-    
+
     stages {
         stage('Git Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/Lakshman386/gctech.git'
             }
         }
-        
+
         stage('Maven Build') {
             steps {
                 sh 'mvn clean install'
             }
         }
-        
+
         stage('Remove Old Container & Image') {
             steps {
-                sh 'sudo docker rm -f cont-1 || true'
-                sh 'sudo docker rmi lakshman386/project-2:p2 || true'
+                sh 'sudo docker rm -f cont-1'
+                sh 'sudo docker rmi lakshman386/project-2:p2'
             }
         }
-        
+
         stage('Docker Build & Push') {
             steps {
                 script {
@@ -76,8 +80,8 @@ pipeline {
                 }
             }
         }
-        
-        stage('Run New Container') {
+
+        stage('Run Container') {
             steps {
                 sh 'sudo docker run -d -p 8080:8080 --name cont-1 lakshman386/project-2:p2'
             }
@@ -86,33 +90,20 @@ pipeline {
 }
 ```
 
-### 3. Configure Node (Jenkins Slave)
-- Open **Manage Jenkins** → **Manage Nodes and Clouds**
-- Add a new **Amazon Linux 2** node with Java installed
-- Install required dependencies:
-  ```sh
-  sudo yum install -y git docker maven
-  sudo systemctl start docker
-  sudo systemctl enable docker
-  ```
+![image](https://github.com/user-attachments/assets/516193b2-f0ea-4370-a7eb-a8872484c60a)
 
-### 4. Docker Configuration
-- Install the **Docker Plugin** in Jenkins
-- Configure **Docker Hub Credentials**
-- Open **Security Groups** and allow **port 8080**
+## 🛠️ Technologies Used
+- **Jenkins** - CI/CD Automation
+- **Docker** - Containerization
+- **Maven** - Build Management
+- **GitHub** - Version Control
+- **EC2** - Deployment Server
 
-### 5. Trigger the Build
-- Click **Build Now** in Jenkins
-- Monitor the pipeline execution
-- Copy the **slave server IP** and access the application:
-  ```sh
-  http://<SLAVE_SERVER_IP>:8080
-  ```
+## 📢 Contributing
+Feel free to submit **pull requests** for improvements!
 
-![image](https://github.com/user-attachments/assets/16dd399e-a3e4-403c-aa9f-0761673f995c)
-
-
-## Conclusion
-This pipeline automates the CI/CD process for a Java application using Jenkins, Docker, and AWS EC2. The build pipeline ensures **code quality, efficient deployment, and scalability**.
+## 📧 Contact
+For queries, reach out via **[@email.com](mailto:lakshminarayanas386@example.com)**.
 
 ---
+🚀 **Automated CI/CD Deployment for Reliable Software Delivery!**
